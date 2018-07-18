@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="NNetworkManager" target="1.5" />
+      <module name="NNetworkManager" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

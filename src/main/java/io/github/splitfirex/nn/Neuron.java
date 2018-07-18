@@ -8,8 +8,7 @@ import java.util.List;
 
 public class Neuron {
 
-    Algorithms actFunction;
-    Algorithms derFunction;
+    Algorithms activationFunction = Algorithms.SIGMOID;
 
     double bias;
     double output;
@@ -27,7 +26,7 @@ public class Neuron {
 
 
     public Neuron(List<Neuron> inputNeurons) {
-        super();
+        this();
         inputNeurons.stream().forEach(neuron -> {
             Axiom axiom = new Axiom(neuron, this);
             neuron.outputAxioms.add(axiom);
@@ -37,7 +36,7 @@ public class Neuron {
 
 
     public double CalculateValue() {
-        output = Algorithms.function(actFunction).apply(inputAxioms.stream().map(x -> x.weight * x.inputNeuron.getOutput()).mapToDouble(x -> x).sum() + bias);
+        output = Algorithms.function(activationFunction).apply(inputAxioms.stream().map(x -> x.weight * x.inputNeuron.getOutput()).mapToDouble(x -> x).sum() + bias);
         //output = Sigmoid.Output(InputSynapses.Sum(a => a.Weight * a.InputNeuron.Value) + Bias);
         return output;
     }
@@ -47,12 +46,12 @@ public class Neuron {
     }
 
     public double CalculateGradient(double target) {
-        gradient = CalculateError(target) * Algorithms.derivative(derFunction).apply(output);
+        gradient = CalculateError(target) * Algorithms.derivative(activationFunction).apply(output);
         return gradient;
     }
 
     public double CalculateGradient() {
-        gradient = outputAxioms.stream().mapToDouble(x -> x.outputNeuron.gradient * x.weight).sum() * Algorithms.derivative(derFunction).apply(output);
+        gradient = outputAxioms.stream().mapToDouble(x -> x.outputNeuron.gradient * x.weight).sum() * Algorithms.derivative(activationFunction).apply(output);
         return gradient;
     }
 
