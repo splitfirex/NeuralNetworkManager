@@ -35,35 +35,36 @@ public class Neuron {
     }
 
 
-    public double CalculateValue() {
-        output = Algorithms.function(activationFunction).apply(inputAxioms.stream().map(x -> x.weight * x.inputNeuron.getOutput()).mapToDouble(x -> x).sum() + bias);
+    public double calculateValue() {
+        output = Algorithms.function(activationFunction)
+                .apply(inputAxioms.stream().map(x -> x.weight * x.inputNeuron.getOutput()).mapToDouble(x -> x).sum() + bias);
         //output = Sigmoid.Output(InputSynapses.Sum(a => a.Weight * a.InputNeuron.Value) + Bias);
         return output;
     }
 
-    public double CalculateError(double target) {
+    public double calculateError(double target) {
         return target - output;
     }
 
-    public double CalculateGradient(double target) {
-        gradient = CalculateError(target) * Algorithms.derivative(activationFunction).apply(output);
+    public double calculateGradient(double target) {
+        gradient = calculateError(target) * Algorithms.derivative(activationFunction).apply(output);
         return gradient;
     }
 
-    public double CalculateGradient() {
+    public double calculateGradient() {
         gradient = outputAxioms.stream().mapToDouble(x -> x.outputNeuron.gradient * x.weight).sum() * Algorithms.derivative(activationFunction).apply(output);
         return gradient;
     }
 
-    public void UpdateWeights(double learnRate, double momentum) {
+    public void updateWeights(double learnRate, double momentum) {
         double prevDelta = delta;
         delta = learnRate * gradient;
-        bias += delta + momentum * prevDelta;
+        bias += delta + (momentum * prevDelta);
 
         inputAxioms.stream().forEach(x -> {
             double prevD = x.deltaWeight;
             x.deltaWeight = learnRate * gradient * x.inputNeuron.getOutput();
-            x.weight += x.deltaWeight + momentum * prevD;
+            x.weight += x.deltaWeight + (momentum * prevD);
         });
     }
 

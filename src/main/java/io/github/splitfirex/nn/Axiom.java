@@ -12,8 +12,8 @@ public class Axiom {
 
 
     public Axiom(Neuron inputNeuron, Neuron outputNeuron) {
-        inputNeuron = inputNeuron;
-        outputNeuron = outputNeuron;
+        this.inputNeuron = inputNeuron;
+        this.outputNeuron = outputNeuron;
         weight = (GenWeigths.generator.nextDouble() * 2) - 1;
     }
 

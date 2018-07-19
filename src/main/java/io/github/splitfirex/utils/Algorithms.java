@@ -3,12 +3,14 @@ package io.github.splitfirex.utils;
 import java.util.function.Function;
 
 public enum Algorithms {
-    SIGMOID;
+    SIGMOID, TANH;
 
     public static Function<Double, Double> function(Algorithms type) {
         switch (type) {
             case SIGMOID:
-                return x -> x < -45.0 ? 0.0 : x > 45.0 ? 1.0 : 1.0 / (1.0 + Math.exp(-x));
+                return x -> 1.0 / (1.0 + Math.exp(-x));
+            case TANH:
+                return x -> Math.tanh(x);
             default:
                 return null;
         }
@@ -17,8 +19,9 @@ public enum Algorithms {
     public static Function<Double, Double> derivative(Algorithms type) {
         switch (type) {
             case SIGMOID:
-                return x -> x * (x - 1.0);
-
+                return x -> x * (1.0 - x);
+            case TANH:
+                return x -> 1 - Math.pow(Math.tanh(x), 2);
             default:
                 return null;
         }

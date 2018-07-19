@@ -5,6 +5,11 @@ public class DataSet {
     double[] input;
     double[] target;
 
+    public DataSet(double[] input, double[] target) {
+        this.target = target;
+        this.input = input;
+    }
+
     public double[] getInput() {
         return input;
     }
