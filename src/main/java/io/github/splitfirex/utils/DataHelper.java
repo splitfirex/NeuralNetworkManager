@@ -16,30 +16,30 @@ import java.util.stream.Stream;
 
 public class DataHelper {
 
-    public static List<List<String>> readFile(InputStream is, String separator, int skipheader) {
+    public static List<List<String>> readFile(InputStream is, String separator) {
 
         List<List<String>> result = new ArrayList<>();
 
         try (Stream<String> lines = new BufferedReader(new InputStreamReader(is)).lines()) {
-            lines.skip(skipheader).forEach(x -> result.add(Stream.of(x.split(separator)).collect(Collectors.toList())));
+            lines.forEach(x -> result.add(Stream.of(x.split(separator)).collect(Collectors.toList())));
         }
         return result;
     }
 
-    public static double[][] normalize(List<List<String>> input, List<Integer> dist) {
+    public static double[][] normalize(List<List<String>> input, List<Integer> dist, int skipheader) {
 
-        double[][] output = new double[input.size()][input.get(0).size()];
+        double[][] output = new double[input.size() - skipheader][input.get(0 + skipheader).size()];
 
-        double[][] minmax = new double[input.get(0).size()][2];
+        double[][] minmax = new double[input.get(0 + skipheader).size()][2];
 
-        for (int i = 0; i < input.get(0).size(); i++) {
+        for (int i = 0; i < input.get(0 + skipheader).size(); i++) {
             minmax[i][0] = Integer.MAX_VALUE;
             minmax[i][1] = Integer.MIN_VALUE;
         }
 
         Map<Integer, Map<String, Integer>> discretes = new HashMap<Integer, Map<String, Integer>>();
 
-        for (int i = 0; i < input.size(); i++) {
+        for (int i = skipheader; i < input.size(); i++) {
             for (int ii = 0; ii < input.get(i).size(); ii++) {
                 if (dist.contains(new Integer(ii))) {
                     if (discretes.get(ii) == null)
@@ -56,13 +56,13 @@ public class DataHelper {
             }
         }
 
-        for (int i = 0; i < input.size(); i++) {
+        for (int i = skipheader; i < input.size(); i++) {
             for (int ii = 0; ii < input.get(i).size(); ii++) {
                 if (dist.contains(new Integer(ii))) {
-                    output[i][ii] = discretes.get(ii).get(input.get(i).get(ii));
+                    output[i - skipheader][ii] = discretes.get(ii).get(input.get(i).get(ii));
                     continue;
                 }
-                output[i][ii] = (Double.parseDouble(input.get(i).get(ii)) - minmax[ii][0]) / (minmax[ii][1] - minmax[ii][0]);
+                output[i - skipheader][ii] = (Double.parseDouble(input.get(i).get(ii)) - minmax[ii][0]) / (minmax[ii][1] - minmax[ii][0]);
             }
         }
         return output;

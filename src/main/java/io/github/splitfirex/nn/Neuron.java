@@ -34,11 +34,9 @@ public class Neuron {
         });
     }
 
-
     public double calculateValue() {
         output = Algorithms.function(activationFunction)
                 .apply(inputAxioms.stream().map(x -> x.weight * x.inputNeuron.getOutput()).mapToDouble(x -> x).sum() + bias);
-        //output = Sigmoid.Output(InputSynapses.Sum(a => a.Weight * a.InputNeuron.Value) + Bias);
         return output;
     }
 
